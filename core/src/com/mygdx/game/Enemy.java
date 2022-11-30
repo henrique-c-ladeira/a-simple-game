@@ -31,4 +31,9 @@ public class Enemy {
     }
   }
 
+  public void moveDown() {
+    raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
+
+  }
+
 }

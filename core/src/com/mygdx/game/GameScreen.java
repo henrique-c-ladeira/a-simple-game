@@ -1,12 +1,9 @@
 package com.mygdx.game;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -14,12 +11,10 @@ public class GameScreen implements Screen {
 	final MyGame game;
 
 	Player player;
-	Enemy enemy;
+	Rain rain;
 
 	Music rainMusic;
 	OrthographicCamera camera;
-	Array<Enemy> raindrops;
-	long lastDropTime;
 	int dropsGathered;
 
 	public GameScreen(final MyGame game) {
@@ -27,7 +22,6 @@ public class GameScreen implements Screen {
 
 		// load the images for the droplet and the bucket, 64x64 pixels each
 		player = new Player();
-		enemy = new Enemy();
 
 		// load the drop sound effect and the rain background "music"
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
@@ -40,16 +34,9 @@ public class GameScreen implements Screen {
 		// create a Rectangle to logically represent the bucket
 
 		// create the raindrops array and spawn the first raindrop
-		raindrops = new Array<Enemy>();
-		spawnRaindrop();
+		rain = new Rain();
+		rain.spawnRaindrop();
 
-	}
-
-	private void spawnRaindrop() {
-		Enemy enemy = new Enemy();
-		enemy.spawn();
-		raindrops.add(enemy);
-		lastDropTime = TimeUtils.nanoTime();
 	}
 
 	@Override
@@ -72,32 +59,17 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
 		player.draw(game);
-		for (Enemy enemy : raindrops) {
-			game.batch.draw(enemy.dropImage, enemy.raindrop.x, enemy.raindrop.y);
-		}
+		rain.draw(game);
 		game.batch.end();
 
 		player.processUserInput(camera);
 
 		// check if we need to create a new raindrop
-		if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
-			spawnRaindrop();
+		if (TimeUtils.nanoTime() - rain.lastDropTime > 1000000000)
+			rain.spawnRaindrop();
 
-		// move the raindrops, remove any that are beneath the bottom edge of
-		// the screen or that hit the bucket. In the later case we increase the
-		// value our drops counter and add a sound effect.
-		Iterator<Enemy> iter = raindrops.iterator();
-		while (iter.hasNext()) {
-			Enemy enemy = iter.next();
-			enemy.raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-			if (enemy.raindrop.y + 64 < 0)
-				iter.remove();
-			if (enemy.raindrop.overlaps(player.bucket)) {
-				dropsGathered++;
-				enemy.dropSound.play();
-				iter.remove();
-			}
-		}
+		rain.moveDown();
+		rain.handleCollision(player.bucket);
 	}
 
 	@Override
@@ -125,8 +97,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		enemy.dropImage.dispose();
-		enemy.dropSound.dispose();
 		player.bucketImage.dispose();
 		rainMusic.dispose();
 	}
