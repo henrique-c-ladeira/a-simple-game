@@ -20,9 +20,6 @@ public class GameScreen implements Screen {
 	public GameScreen(final MyGame game) {
 		this.game = game;
 
-		// load the images for the droplet and the bucket, 64x64 pixels each
-		player = new Player();
-
 		// load the drop sound effect and the rain background "music"
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 		rainMusic.setLooping(true);
@@ -31,9 +28,7 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 
-		// create a Rectangle to logically represent the bucket
-
-		// create the raindrops array and spawn the first raindrop
+		player = new Player();
 		rain = new Rain();
 		rain.spawnRaindrop();
 
