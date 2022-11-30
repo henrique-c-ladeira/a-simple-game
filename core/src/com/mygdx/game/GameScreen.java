@@ -3,15 +3,9 @@ package com.mygdx.game;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -20,11 +14,11 @@ public class GameScreen implements Screen {
 	final MyGame game;
 
 	Player player;
-	Texture dropImage;
-	Sound dropSound;
+	Enemy enemy;
+
 	Music rainMusic;
 	OrthographicCamera camera;
-	Array<Rectangle> raindrops;
+	Array<Enemy> raindrops;
 	long lastDropTime;
 	int dropsGathered;
 
@@ -32,11 +26,10 @@ public class GameScreen implements Screen {
 		this.game = game;
 
 		// load the images for the droplet and the bucket, 64x64 pixels each
-		dropImage = new Texture(Gdx.files.internal("droplet.png"));
 		player = new Player();
+		enemy = new Enemy();
 
 		// load the drop sound effect and the rain background "music"
-		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 		rainMusic.setLooping(true);
 
@@ -47,18 +40,15 @@ public class GameScreen implements Screen {
 		// create a Rectangle to logically represent the bucket
 
 		// create the raindrops array and spawn the first raindrop
-		raindrops = new Array<Rectangle>();
+		raindrops = new Array<Enemy>();
 		spawnRaindrop();
 
 	}
 
 	private void spawnRaindrop() {
-		Rectangle raindrop = new Rectangle();
-		raindrop.x = MathUtils.random(0, 800 - 64);
-		raindrop.y = 480;
-		raindrop.width = 64;
-		raindrop.height = 64;
-		raindrops.add(raindrop);
+		Enemy enemy = new Enemy();
+		enemy.spawn();
+		raindrops.add(enemy);
 		lastDropTime = TimeUtils.nanoTime();
 	}
 
@@ -82,28 +72,12 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
 		player.draw(game);
-		for (Rectangle raindrop : raindrops) {
-			game.batch.draw(dropImage, raindrop.x, raindrop.y);
+		for (Enemy enemy : raindrops) {
+			game.batch.draw(enemy.dropImage, enemy.raindrop.x, enemy.raindrop.y);
 		}
 		game.batch.end();
 
-		// process user input
-		if (Gdx.input.isTouched()) {
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			player.bucket.x = touchPos.x - 64 / 2;
-		}
-		if (Gdx.input.isKeyPressed(Keys.LEFT))
-			player.bucket.x -= 200 * Gdx.graphics.getDeltaTime();
-		if (Gdx.input.isKeyPressed(Keys.RIGHT))
-			player.bucket.x += 200 * Gdx.graphics.getDeltaTime();
-
-		// make sure the player.bucket stays within the screen bounds
-		if (player.bucket.x < 0)
-			player.bucket.x = 0;
-		if (player.bucket.x > 800 - 64)
-			player.bucket.x = 800 - 64;
+		player.processUserInput(camera);
 
 		// check if we need to create a new raindrop
 		if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
@@ -112,15 +86,15 @@ public class GameScreen implements Screen {
 		// move the raindrops, remove any that are beneath the bottom edge of
 		// the screen or that hit the bucket. In the later case we increase the
 		// value our drops counter and add a sound effect.
-		Iterator<Rectangle> iter = raindrops.iterator();
+		Iterator<Enemy> iter = raindrops.iterator();
 		while (iter.hasNext()) {
-			Rectangle raindrop = iter.next();
-			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-			if (raindrop.y + 64 < 0)
+			Enemy enemy = iter.next();
+			enemy.raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
+			if (enemy.raindrop.y + 64 < 0)
 				iter.remove();
-			if (raindrop.overlaps(player.bucket)) {
+			if (enemy.raindrop.overlaps(player.bucket)) {
 				dropsGathered++;
-				dropSound.play();
+				enemy.dropSound.play();
 				iter.remove();
 			}
 		}
@@ -151,9 +125,9 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		dropImage.dispose();
+		enemy.dropImage.dispose();
+		enemy.dropSound.dispose();
 		player.bucketImage.dispose();
-		dropSound.dispose();
 		rainMusic.dispose();
 	}
 
