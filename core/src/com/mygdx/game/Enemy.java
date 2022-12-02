@@ -12,7 +12,7 @@ public class Enemy {
   Rectangle raindrop;
 
   public Enemy() {
-    dropImage = new Texture(Gdx.files.internal("droplet.png"));
+    dropImage = new Texture(Gdx.files.internal("coin.png"));
     dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
   }
 
@@ -20,8 +20,8 @@ public class Enemy {
     raindrop = new Rectangle();
     raindrop.x = MathUtils.random(0, 800 - 64);
     raindrop.y = 480;
-    raindrop.width = 64;
-    raindrop.height = 64;
+    raindrop.width = 16;
+    raindrop.height = 16;
   }
 
   public void handleCollision(Rectangle collidingObject) {

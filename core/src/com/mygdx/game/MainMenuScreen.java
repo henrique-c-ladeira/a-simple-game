@@ -18,7 +18,7 @@ public class MainMenuScreen implements Screen {
 		camera.setToOrtho(false, 800, 480);
 	}
 
-  @Override
+	@Override
 	public void render(float delta) {
 		ScreenUtils.clear(0, 0, 0.2f, 1);
 
@@ -58,5 +58,5 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-  }
+	}
 }
