@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
 		// all drops
 		game.batch.begin();
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
+
 		player.draw(game);
 		rain.draw(game);
 		game.batch.end();
@@ -60,11 +61,11 @@ public class GameScreen implements Screen {
 		player.processUserInput(camera);
 
 		// check if we need to create a new raindrop
-		if (TimeUtils.nanoTime() - rain.lastDropTime > 1000000000)
+		if (rain.shouldSpawnRaindrop())
 			rain.spawnRaindrop();
 
 		rain.moveDown();
-		rain.handleCollision(player.bucket);
+		rain.handleCollision(player.getRectangleBoundary());
 	}
 
 	@Override

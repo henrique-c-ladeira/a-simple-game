@@ -49,4 +49,9 @@ public class Rain {
       }
     }
   }
+
+  public boolean shouldSpawnRaindrop() {
+    return TimeUtils.nanoTime() - lastDropTime > 1000000000;
+  }
+
 }

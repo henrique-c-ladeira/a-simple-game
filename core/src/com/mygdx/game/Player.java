@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Player {
   Texture bucketImage;
-  Rectangle bucket;
+  private Rectangle bucket;
 
   public Player() {
     bucketImage = new Texture(Gdx.files.internal("bucket.png"));
@@ -27,12 +27,11 @@ public class Player {
 
   public void processUserInput(OrthographicCamera camera) {
     // process user input
-    if (Gdx.input.isTouched()) {
-      Vector3 touchPos = new Vector3();
-      touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-      camera.unproject(touchPos);
-      bucket.x = touchPos.x - 64 / 2;
-    }
+    Vector3 touchPos = new Vector3();
+    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+    camera.unproject(touchPos);
+    bucket.x = touchPos.x - 64 / 2;
+    bucket.y = touchPos.y - 64 / 2;
 
     if (Gdx.input.isKeyPressed(Keys.LEFT))
       bucket.x -= 200 * Gdx.graphics.getDeltaTime();
@@ -44,6 +43,10 @@ public class Player {
       bucket.x = 0;
     if (bucket.x > 800 - 64)
       bucket.x = 800 - 64;
+  }
+
+  public Rectangle getRectangleBoundary() {
+    return this.bucket;
   }
 
 }
