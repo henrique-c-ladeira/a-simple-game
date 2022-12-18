@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Player extends Actor {
   private Rectangle boundary;
-  Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
+  Animation<TextureRegion> walkAnimation;
   Texture walkSheet;
   private static final int FRAME_COLS = 1, FRAME_ROWS = 4;
   float stateTime;

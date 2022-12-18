@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Particle {
-  Texture dropImage;
-  Sound dropSound;
+  Texture image;
+  Sound collisionSound;
   Rectangle boundary;
 
   public Particle() {
-    dropImage = new Texture(Gdx.files.internal("coin.png"));
-    dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+    image = new Texture(Gdx.files.internal("coin.png"));
+    collisionSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
   }
 
   public void spawn() {
@@ -26,7 +26,7 @@ public class Particle {
 
   public void handleCollision(Rectangle collidingObject) {
     if (boundary.overlaps(collidingObject)) {
-      dropSound.play();
+      collisionSound.play();
     }
   }
 

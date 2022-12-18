@@ -20,7 +20,7 @@ public class ParticleSpawner extends Actor {
   @Override
   public void draw(Batch batch, float dt) {
     for (Particle enemy : raindrops) {
-      batch.draw(enemy.dropImage, enemy.boundary.x, enemy.boundary.y);
+      batch.draw(enemy.image, enemy.boundary.x, enemy.boundary.y);
     }
   }
 
@@ -47,7 +47,7 @@ public class ParticleSpawner extends Actor {
       Particle enemy = iter.next();
       if (enemy.boundary.overlaps(collidingObject)) {
         // dropsGathered++;
-        enemy.dropSound.play();
+        enemy.collisionSound.play();
         iter.remove();
       }
     }
