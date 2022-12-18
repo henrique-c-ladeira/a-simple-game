@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,17 +6,19 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.MyGame;
+import com.mygdx.game.actors.ParticleSpawner;
+import com.mygdx.game.actors.Player;
 
 public class GameScreen implements Screen {
 	final MyGame game;
 
-	Stage mainStage;
+	private Stage mainStage;
 
-	Player player;
-	ParticleSpawner rain;
+	private Player player;
+	private ParticleSpawner rain;
 
-	Music rainMusic;
-	int dropsGathered;
+	private Music rainMusic;
 
 	public GameScreen(final MyGame game) {
 		this.game = game;
@@ -33,8 +35,8 @@ public class GameScreen implements Screen {
 
 		mainStage = new Stage();
 
-		mainStage.addActor(player);
 		mainStage.addActor(rain);
+		mainStage.addActor(player);
 
 	}
 

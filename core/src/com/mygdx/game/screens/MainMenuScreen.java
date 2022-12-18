@@ -1,14 +1,16 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.MyGame;
+import com.mygdx.game.actors.MainMenuMessage;
 
 public class MainMenuScreen implements Screen {
 
 	final MyGame game;
-	final Stage uiStage;
+	private final Stage uiStage;
 
 	public MainMenuScreen(final MyGame game) {
 		this.game = game;

@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class MainMenuMessage extends Actor {
-  public BitmapFont font;
+  private BitmapFont font;
 
   public MainMenuMessage() {
     font = new BitmapFont(Gdx.files.internal("font.fnt"));
