@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Particle {
   Texture dropImage;
   Sound dropSound;
-  Rectangle raindrop;
+  Rectangle boundary;
 
   public Particle() {
     dropImage = new Texture(Gdx.files.internal("coin.png"));
@@ -17,23 +17,21 @@ public class Particle {
   }
 
   public void spawn() {
-    raindrop = new Rectangle();
-    raindrop.x = MathUtils.random(0, 800 - 64);
-    raindrop.y = 480;
-    raindrop.width = 16;
-    raindrop.height = 16;
+    boundary = new Rectangle();
+    boundary.x = MathUtils.random(0, 800 - 64);
+    boundary.y = 480;
+    boundary.width = 16;
+    boundary.height = 16;
   }
 
   public void handleCollision(Rectangle collidingObject) {
-    if (raindrop.overlaps(collidingObject)) {
-      // dropsGathered++;
+    if (boundary.overlaps(collidingObject)) {
       dropSound.play();
     }
   }
 
   public void moveDown() {
-    raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-
+    boundary.y -= 200 * Gdx.graphics.getDeltaTime();
   }
 
 }

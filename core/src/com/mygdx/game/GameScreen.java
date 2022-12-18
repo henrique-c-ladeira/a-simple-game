@@ -13,23 +13,23 @@ public class GameScreen implements Screen {
 	Stage mainStage;
 
 	Player player;
-	Rain rain;
+	ParticleSpawner rain;
 
 	Music rainMusic;
 	int dropsGathered;
 
 	public GameScreen(final MyGame game) {
-		Gdx.graphics.setSystemCursor(SystemCursor.None);
-
 		this.game = game;
+
+		Gdx.graphics.setSystemCursor(SystemCursor.None);
 
 		// load the drop sound effect and the rain background "music"
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("background-music.mp3"));
 		rainMusic.setLooping(true);
 
 		player = new Player();
-		rain = new Rain();
-		rain.spawnRaindrop();
+		rain = new ParticleSpawner();
+		rain.spawnParticle();
 
 		mainStage = new Stage();
 
