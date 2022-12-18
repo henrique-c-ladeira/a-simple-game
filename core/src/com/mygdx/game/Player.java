@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Player {
+public class Player extends Actor {
   private Rectangle boundary;
   Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
   Texture walkSheet;
@@ -49,11 +51,12 @@ public class Player {
     stateTime = 0f;
   }
 
-  public void draw(MyGame game) {
+  @Override
+  public void draw(Batch batch, float parentAlpha) {
     stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
     TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
 
-    game.batch.draw(currentFrame, flip ? boundary.x + boundary.width : boundary.x, boundary.y,
+    batch.draw(currentFrame, flip ? boundary.x + boundary.width : boundary.x, boundary.y,
         flip ? -boundary.width : boundary.width, boundary.height);
   }
 

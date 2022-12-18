@@ -3,18 +3,19 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
 	final MyGame game;
 
+	Stage mainStage;
+
 	Player player;
 	Rain rain;
 
 	Music rainMusic;
-	OrthographicCamera camera;
 	int dropsGathered;
 
 	public GameScreen(final MyGame game) {
@@ -26,40 +27,23 @@ public class GameScreen implements Screen {
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("background-music.mp3"));
 		rainMusic.setLooping(true);
 
-		// create the camera and the SpriteBatch
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
-
 		player = new Player();
 		rain = new Rain();
 		rain.spawnRaindrop();
+
+		mainStage = new Stage();
+
+		mainStage.addActor(player);
+		mainStage.addActor(rain);
 
 	}
 
 	@Override
 	public void render(float delta) {
-		// clear the screen with a dark blue color. The
-		// arguments to clear are the red, green
-		// blue and alpha component in the range [0,1]
-		// of the color to be used to clear the screen.
 		ScreenUtils.clear(0, 0, 0.1f, 1);
-
-		// tell the camera to update its matrices.
-		camera.update();
-
-		// tell the SpriteBatch to render in the
-		// coordinate system specified by the camera.
-		game.batch.setProjectionMatrix(camera.combined);
-
-		// begin a new batch and draw the bucket and
-		// all drops
-		game.batch.begin();
-
-		player.draw(game);
-		rain.draw(game);
-		game.batch.end();
-
 		player.processUserInput();
+
+		mainStage.act();
 
 		// check if we need to create a new raindrop
 		if (rain.shouldSpawnRaindrop())
@@ -67,6 +51,8 @@ public class GameScreen implements Screen {
 
 		rain.moveDown();
 		rain.handleCollision(player.getRectangleBoundary());
+
+		mainStage.draw();
 	}
 
 	@Override

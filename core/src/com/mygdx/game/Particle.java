@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Enemy {
+public class Particle {
   Texture dropImage;
   Sound dropSound;
   Rectangle raindrop;
 
-  public Enemy() {
+  public Particle() {
     dropImage = new Texture(Gdx.files.internal("coin.png"));
     dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
   }
