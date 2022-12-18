@@ -57,4 +57,16 @@ public class Rain extends Actor {
     return TimeUtils.nanoTime() - lastDropTime > 1000000000;
   }
 
+  @Override
+  public void act(float delta) {
+    // TODO Auto-generated method stub
+    super.act(delta);
+
+    // check if we need to create a new raindrop
+    if (shouldSpawnRaindrop())
+      spawnRaindrop();
+
+    moveDown();
+  }
+
 }

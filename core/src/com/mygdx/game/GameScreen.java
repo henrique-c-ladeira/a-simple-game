@@ -41,15 +41,8 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		ScreenUtils.clear(0, 0, 0.1f, 1);
-		player.processUserInput();
 
 		mainStage.act();
-
-		// check if we need to create a new raindrop
-		if (rain.shouldSpawnRaindrop())
-			rain.spawnRaindrop();
-
-		rain.moveDown();
 		rain.handleCollision(player.getRectangleBoundary());
 
 		mainStage.draw();

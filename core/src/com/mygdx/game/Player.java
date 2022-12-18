@@ -81,4 +81,10 @@ public class Player extends Actor {
     return this.boundary;
   }
 
+  @Override
+  public void act(float delta) {
+    super.act(delta);
+    processUserInput();
+  }
+
 }
