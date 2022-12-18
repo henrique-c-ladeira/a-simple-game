@@ -5,33 +5,38 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Particle {
+public class Particle extends Actor {
   Texture image;
   Sound collisionSound;
-  Rectangle boundary;
+  private Rectangle boundary;
 
   public Particle() {
     image = new Texture(Gdx.files.internal("coin.png"));
     collisionSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+
+    setWidth(16);
+    setHeight(16);
+    boundary = new Rectangle(getX(), getY(), getWidth(), getHeight());
+
+    setX(MathUtils.random(0, 800 - 64));
+    setY(480);
   }
 
-  public void spawn() {
-    boundary = new Rectangle();
-    boundary.x = MathUtils.random(0, 800 - 64);
-    boundary.y = 480;
-    boundary.width = 16;
-    boundary.height = 16;
+  @Override
+  public void setY(float y) {
+    super.setY(y);
+    boundary.setY(getY() - 200 * Gdx.graphics.getDeltaTime());
   }
 
-  public void handleCollision(Rectangle collidingObject) {
-    if (boundary.overlaps(collidingObject)) {
-      collisionSound.play();
-    }
+  @Override
+  public void act(float delta) {
+    setY(getY() - 200 * Gdx.graphics.getDeltaTime());
   }
 
-  public void moveDown() {
-    boundary.y -= 200 * Gdx.graphics.getDeltaTime();
+  public boolean overlaps(Rectangle collingObject) {
+    return boundary.overlaps(collingObject);
   }
 
 }

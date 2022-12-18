@@ -10,21 +10,22 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Player extends Actor {
-  private Rectangle boundary;
+  private static final int FRAME_COLS = 1, FRAME_ROWS = 4;
+
   Animation<TextureRegion> walkAnimation;
   Texture walkSheet;
-  private static final int FRAME_COLS = 1, FRAME_ROWS = 4;
   float stateTime;
   boolean flip;
+  private Rectangle boundary;
 
   public Player() {
     walkSheet = new Texture(Gdx.files.internal("dwarf.png"));
-    boundary = new Rectangle();
-    boundary.x = 800 / 2 - 64 / 2; // center the bucket horizontally
-    boundary.y = 20; // bottom left corner of the bucket is 20 pixels above
+    setWidth(64);
+    setHeight(64);
+    boundary = new Rectangle(getX(), getY(), getWidth(), getHeight());
+    setX(800 / 2 - 64 / 2); // center the bucket horizontally
+    setY(20); // bottom left corner of the bucket is 20 pixels above
     // the bottom screen edge
-    boundary.width = 64;
-    boundary.height = 64;
 
     // Use the split utility method to create a 2D array of TextureRegions. This is
     // possible because this sprite sheet contains frames of equal size and they are
@@ -56,35 +57,43 @@ public class Player extends Actor {
     stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
     TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
 
-    batch.draw(currentFrame, flip ? boundary.x + boundary.width : boundary.x, boundary.y,
-        flip ? -boundary.width : boundary.width, boundary.height);
+    batch.draw(currentFrame, flip ? getX() + getWidth() : getX(), getY(),
+        flip ? -getWidth() : getWidth(), getHeight());
   }
 
-  public void processUserInput() {
-    if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-      flip = true;
-      boundary.x -= 200 * Gdx.graphics.getDeltaTime();
-    }
-    if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-      flip = false;
-      boundary.x += 200 * Gdx.graphics.getDeltaTime();
-    }
-
-    // make sure the bucket stays within the screen bounds
-    if (boundary.x < 0)
-      boundary.x = 0;
-    if (boundary.x > 800 - 64)
-      boundary.x = 800 - 64;
+  @Override
+  public void setX(float x) {
+    super.setX(x);
+    boundary.setX(x);
   }
 
-  public Rectangle getRectangleBoundary() {
-    return this.boundary;
+  @Override
+  public void setY(float y) {
+    super.setY(y);
+    boundary.setY(y);
   }
 
   @Override
   public void act(float delta) {
     super.act(delta);
-    processUserInput();
+
+    if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+      flip = true;
+      setX(getX() - 200 * delta);
+    }
+    if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+      flip = false;
+      setX(getX() + 200 * delta);
+    }
+
+    if (getX() < 0)
+      setX(0);
+    if (getX() > 800 - 64)
+      setX(800 - 64);
+  }
+
+  public Rectangle getBoundary() {
+    return boundary;
   }
 
 }

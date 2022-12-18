@@ -1,4 +1,4 @@
-package com.mygdx.game.actors;
+package com.mygdx.game.actors.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;

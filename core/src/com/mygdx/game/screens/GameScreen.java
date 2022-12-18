@@ -31,12 +31,11 @@ public class GameScreen implements Screen {
 
 		player = new Player();
 		rain = new ParticleSpawner();
-		rain.spawnParticle();
 
 		mainStage = new Stage();
 
-		mainStage.addActor(rain);
 		mainStage.addActor(player);
+		mainStage.addActor(rain);
 
 	}
 
@@ -45,7 +44,8 @@ public class GameScreen implements Screen {
 		ScreenUtils.clear(0, 0, 0.1f, 1);
 
 		mainStage.act();
-		rain.handleCollision(player.getRectangleBoundary());
+
+		rain.handleCollision(player.getBoundary());
 
 		mainStage.draw();
 	}

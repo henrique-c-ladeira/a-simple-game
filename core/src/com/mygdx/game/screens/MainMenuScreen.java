@@ -5,7 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.MyGame;
-import com.mygdx.game.actors.MainMenuMessage;
+import com.mygdx.game.actors.ui.MainMenuMessage;
 
 public class MainMenuScreen implements Screen {
 

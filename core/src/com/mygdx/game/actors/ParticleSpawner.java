@@ -9,52 +9,45 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class ParticleSpawner extends Actor {
-  Array<Particle> raindrops;
-  long lastDropTime;
+  private Array<Particle> particlesArray;
+  private long lastDropTime;
 
   public ParticleSpawner() {
-    raindrops = new Array<Particle>();
+    particlesArray = new Array<Particle>();
     lastDropTime = TimeUtils.nanoTime();
   }
 
   @Override
   public void draw(Batch batch, float dt) {
-    for (Particle enemy : raindrops) {
-      batch.draw(enemy.image, enemy.boundary.x, enemy.boundary.y);
+    for (Particle particle : particlesArray) {
+      batch.draw(particle.image, particle.getX(), particle.getY());
     }
   }
 
   public void spawnParticle() {
-    Particle enemy = new Particle();
-    enemy.spawn();
-    raindrops.add(enemy);
+    Particle particle = new Particle();
+    particlesArray.add(particle);
+    this.getStage().addActor(particle);
     lastDropTime = TimeUtils.nanoTime();
-  }
-
-  public void moveDown() {
-    Iterator<Particle> iter = raindrops.iterator();
-    while (iter.hasNext()) {
-      Particle particle = iter.next();
-      particle.moveDown();
-      if (particle.boundary.y + 64 < 0)
-        iter.remove();
-    }
-  }
-
-  public void handleCollision(Rectangle collidingObject) {
-    Iterator<Particle> iter = raindrops.iterator();
-    while (iter.hasNext()) {
-      Particle enemy = iter.next();
-      if (enemy.boundary.overlaps(collidingObject)) {
-        // dropsGathered++;
-        enemy.collisionSound.play();
-        iter.remove();
-      }
-    }
   }
 
   public boolean shouldSpawnParticle() {
     return TimeUtils.nanoTime() - lastDropTime > 1000000000;
+  }
+
+  public void handleCollision(Rectangle collidingObject) {
+    Iterator<Particle> iter = particlesArray.iterator();
+    while (iter.hasNext()) {
+      Particle particle = iter.next();
+      if (particle.overlaps(collidingObject)) {
+        particle.collisionSound.play();
+        iter.remove();
+      }
+      if (particle.getY() < -10) {
+        particle.collisionSound.play();
+        iter.remove();
+      }
+    }
   }
 
   @Override
@@ -63,8 +56,7 @@ public class ParticleSpawner extends Actor {
 
     if (shouldSpawnParticle())
       spawnParticle();
-
-    moveDown();
+    System.out.println(particlesArray.size);
   }
 
 }
